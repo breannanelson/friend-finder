@@ -5,27 +5,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Survey</title>
 </head>
 
 <body>
-    <form>
-        Name:
-        <br>
-        <input type="text" id="user-name">
-        <br> Picture:
-        <br>
-        <input type="text" id="user-pic">
-        <br> Question 1 (1-5):
-        <br>
-        <input type="text" id="user-q1">
-        <br> Question 2 (1-5):
-        <br>
-        <input type="text" id="user-q2">
-        <br>
-        <br>
-        <button id='submitBTN'>Submit</button>
-    </form>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-3">Survey Questions</h1>
+            <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
+        </div>
+    </div>
+    <div id='main-content'>
+        <form>
+            <h1>About You</h1>
+            Name (Required):
+            <br>
+            <input type="text" class="form-control" id="user-name">
+            <br> Picture (Required):
+            <br>
+            <input type="text" class="form-control" id="user-pic">
+            <br>
+            <hr>
+            <br>
+            <div class="form-group">
+                <h3>Question 1</h3>
+                <label>Your mind is always buzzing with unexplored ideas and plans.</label>
+                <br>
+                <select id="user-q1" class="form-control user-input">
+                    <option selected>Select an Option</option>
+                    <option>1 (Strongly Disagree)</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5 (Strongly Agree)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <h3>Question 2</h3>
+                <label>Generally speaking, you rely more on your experience than your imagination.</label>
+                <br>
+                <select id="user-q2" class="form-control user-input">
+                    <option selected>Select an Option</option>
+                    <option>1 (Strongly Disagree)</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5 (Strongly Agree)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <h3>Question 3</h3>
+                <label>You find it easy to stay relaxed and focused even when there is some pressure.</label>
+                <br>
+                <select id="user-q3" class="form-control user-input">
+                    <option selected>Select an Option</option>
+                    <option>1 (Strongly Disagree)</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5 (Strongly Agree)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <h3>Question 4</h3>
+                <label>You rarely do something just out of sheer curiosity.</label>
+                <br>
+                <select id="user-q4" class="form-control user-input">
+                    <option selected>Select an Option</option>
+                    <option>1 (Strongly Disagree)</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5 (Strongly Agree)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <h3>Question 5</h3>
+                <label>People can rarely upset you.</label>
+                <br>
+                <select id="user-q5" class="form-control user-input">
+                    <option selected>Select an Option</option>
+                    <option>1 (Strongly Disagree)</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5 (Strongly Agree)</option>
+                </select>
+            </div>
+            <br>
+            <button id='submitBTN' class='btn btn-primary'>Submit</button>
+        </form>
+    </div>
+
 
     <div id="match">
 
@@ -42,40 +116,38 @@
 
         $('#submitBTN').on('click', function (event) {
             event.preventDefault();
-            var img = $("<img src='https://upload.wikimedia.org/wikipedia/commons/d/da/Purple_flower_%284764445139%29.jpg' alt='flower'>");
-
-            swal({
-                title: "Your Match!",
-                content: img
-                });
 
             id++;
             var friend = {
                 id: id,
                 name: $('#user-name').val().trim(),
-                pic: $('#user-pic').val().trim(),
-                scores: [$('#user-q1').val(), $('#user-q2').val()]
+                photo: $('#user-pic').val().trim(),
+                scores: [$('#user-q1').val().charAt(0), $('#user-q2').val().charAt(0), $('#user-q3').val().charAt(0), $('#user-q4').val().charAt(0), $('#user-q5').val().charAt(0)]
             };
+
+
 
             console.log(friend)
 
             $.post('/api/friends', friend, function (data, status) {
-                console.log("Hello: " + data)
-                console.log("Status: " + status)
-                friendGet();
+                console.log(data.matchName)
+                console.log(data.matchImage)
+
+                var img = document.createElement("img");
+                img.src = data.matchImage;
+                img.style.width = '300px';
+                img.style.height = '350px';
+
+                swal({
+                    title: "Your Match!",
+                    text: data.matchName,
+                    content: img
+                });
+
             })
 
 
         })
-
-        function friendGet() {
-            $.get('/api/friends', function (data, status) {
-                console.log("Get sucessful");
-                // $('#match').html(data.macthName)
-
-            })
-        }
-
 
     </script>
 </body>

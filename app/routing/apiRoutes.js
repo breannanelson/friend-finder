@@ -10,45 +10,33 @@ exports.apiRoutes = function (app) {
     app.post('/api/friends', function (req, res) {
         var userInput = req.body;
         var userScores = userInput.scores;
-        friendArr.push(userInput);
 
-        // res.json(friendArr)
-
-		// console.log('userResponses = ' + userResponses);
-
-		// Compute best friend match
+		var totalDiff = 100;
 		var matchName = '';
 		var matchImage = '';
-		var totalDifference = 100; // Make the initial value big for comparison
+		
 
-		// Examine all existing friends in the list
-		for (var i = 0; i < friendArr.length; i++) {
-			// console.log('friend = ' + JSON.stringify(friends[i]));
-
-			// Compute differenes for each question
+		
+		for (var i = 0; i < friendArr.length; i++) {			
 			var diff = 0;
 			for (var j = 0; j < userScores.length; j++) {
 				diff += Math.abs(friendArr[i].scores[j] - userScores[j]);
 			}
-			// console.log('diff = ' + diff);
+			
 
-			// If lowest difference, record the friend match
-			if (diff < totalDifference) {
-				// console.log('Closest match found = ' + diff);
-				// console.log('Friend name = ' + friends[i].name);
-				// console.log('Friend image = ' + friends[i].photo);
-
-				totalDifference = diff;
+			
+			if (diff < totalDiff) {
+				totalDiff = diff;
 				matchName = friendArr[i].name;
-				matchImage = friendArr[i].pic;
+				matchImage = friendArr[i].photo;
 			}
 		}
 
+		friendArr.push(userInput);
 
-        // Send appropriate response
-        // res.send(friendArr)
-        // console.log({status: 'OK', matchName: matchName, matchImage: matchImage})
-		res.json({status: 'OK', matchName: matchName, matchImage: matchImage});
+        console.log(friendArr)
+        console.log({matchName: matchName, matchImage: matchImage})
+		res.json({matchName: matchName, matchImage: matchImage});
 
 
     });
@@ -59,7 +47,7 @@ exports.apiRoutes = function (app) {
     // With that done, compare the difference between current user's scores against those from other users, question by question. Add up the differences to calculate the totalDifference.
     app.get('/api/friends', function (req, res) {
 		// res.send(matchName)
-        // res.send(friendArr)
+        res.json(friendArr)
 
     });
     app.get('/userid', function (req, res) {
